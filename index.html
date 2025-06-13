@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khám phá Huế - Du lịch, Ẩm thực & Homestay</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: url('https://mia.vn/media/uploads/blog-du-lich/mach-ban-kinh-nghiem-di-hue-ban-dem-choi-gi-02-1638922092.jpg') center/cover no-repeat;
+      filter: blur(2px) brightness(0.85);
+      opacity: 0.7;
+      transition: opacity 0.5s;
+    }
+    .glass {
+      background: rgba(255,255,255,0.7);
+      box-shadow: 0 8px 32px rgba(124,58,237,0.18);
+      border-radius: 18px;
+      backdrop-filter: blur(4px);
+    }
+    .homestay-item, .place-item, .food-item {
+      perspective: 800px;
+    }
+    .homestay-item:hover, .place-item:hover, .food-item:hover {
+      transform: translateY(-10px) scale(1.04) rotateY(6deg);
+      box-shadow: 0 12px 32px rgba(124,58,237,0.18);
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading overlay -->
+  <div id="loader">
+    <div class="spinner"></div>
+    <div>Đang tải trang...</div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" style="display:none;position:fixed;bottom:32px;right:32px;z-index:99999;min-width:220px;padding:16px 28px;background:#fbbf24;color:#7c3aed;font-size:1.1rem;border-radius:8px;box-shadow:0 4px 24px rgba(124,58,237,0.18);font-weight:600;opacity:0;transition:opacity 0.4s;">
+    <span id="toast-msg"></span>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="header-flex">
+      <div class="logo">
+        <h1>Khám phá Huế</h1>
+      </div>
+      <nav>
+        <a href="#diadiem">Địa điểm</a>
+        <a href="#amthuc">Ẩm thực</a>
+        <a href="#homestay">Homestay</a>
+        <a href="#lienhe">Liên hệ</a>
+      </nav>
+      <div id="user-area">
+        <button class="auth-btn-header" id="login-btn" onclick="document.getElementById('auth-modal').style.display='flex'">
+          <span class="auth-icon">🔑</span> Đăng nhập
+        </button>
+        <span id="user-info" style="display:none; align-items:center; gap:10px;">
+          <span id="username-display" style="font-weight:600;"></span>
+          <button class="auth-btn-header" id="logout-btn" onclick="logoutUser()">Đăng xuất</button>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Cover image -->
+  <img class="cover-img" src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1200&q=80" alt="Huế Cover">
+
+  <main id="main-content">
+    <!-- Section: Địa điểm du lịch -->
+    <section id="diadiem" class="glass">
+      <h2>Địa điểm nổi bật ở Huế</h2>
+      <div class="place-list">
+        <div class="place-item">
+          <a href="places/dai-noi-hue.html">
+            <h3>Đại Nội Huế</h3>
+            <img src="https://vcdn1-dulich.vnecdn.net/2020/06/11/bia_1591884651.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=Qf3OdUPrMyQkdNEa1ALo-g" alt="Đại Nội Huế" class="main-img">
+            <p>Kinh thành của triều đại nhà Nguyễn, biểu tượng lịch sử và văn hóa của Huế.</p>
+          </a>
+        </div>
+        <div class="place-item">
+          <a href="places/chua-thien-mu.html">
+            <h3>Chùa Thiên Mụ</h3>
+            <img src="https://seatimes.com.vn/wp-content/uploads/2024/05/z5407223251403_a329c2c30cc57fdc781a1582b42300b6.jpg" alt="Chùa Thiên Mụ" class="main-img">
+            <p>Ngôi chùa cổ kính bên dòng sông Hương, gắn liền với nhiều truyền thuyết.</p>
+          </a>
+        </div>
+        <div class="place-item">
+          <a href="places/song-huong.html">
+            <h3>Sông Hương</h3>
+            <img src="https://images.pexels.com/photos/129731/pexels-photo-129731.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Sông Hương" class="main-img">
+            <p>Dòng sông thơ mộng chảy qua lòng thành phố Huế, biểu tượng của sự dịu dàng.</p>
+          </a>
+        </div>
+        <div class="place-item">
+          <a href="places/lang-tu-duc.html">
+            <h3>Lăng Tự Đức</h3>
+            <img src="https://images.pexels.com/photos/7897500/pexels-photo-7897500.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Lăng Tự Đức" class="main-img">
+            <p>Lăng mộ của vua Tự Đức, nổi bật với kiến trúc hài hòa và phong cảnh thơ mộng.</p>
+          </a>
+        </div>
+        <div class="place-item">
+          <a href="places/bien-lang-co.html">
+            <img src="https://images.pexels.com/photos/10616229/pexels-photo-10616229.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Biển Lăng Cô" class="main-img">
+            <h3>Biển Lăng Cô</h3>
+            <p>Một trong những bãi biển đẹp nhất Việt Nam với làn nước trong xanh và cát trắng mịn.</p>
+          </a>
+        </div>
+        <div class="place-item">
+          <a href="places/cau-truong-tien.html">
+            <img src="https://images.pexels.com/photos/7897475/pexels-photo-7897475.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Cầu Trường Tiền" class="main-img">
+            <h3>Cầu Trường Tiền</h3>
+            <p>Biểu tượng của Huế, cây cầu lịch sử bắc qua sông Hương với kiến trúc độc đáo.</p>
+          </a>
+        </div>
+        <div class="place-item">
+          <a href="places/cho-dong-ba.html">
+            <img src="https://images.pexels.com/photos/7897490/pexels-photo-7897490.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Chợ Đông Ba" class="main-img">
+            <h3>Chợ Đông Ba</h3>
+            <p>Chợ truyền thống nổi tiếng, nơi bạn có thể tìm thấy mọi thứ từ ẩm thực đến hàng thủ công.</p>
+          </a>
+        </div>
+        <div class="place-item">
+          <a href="places/vuon-quoc-gia-bach-ma.html">
+            <img src="https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Vườn Quốc gia Bạch Mã" class="main-img">
+            <h3>Vườn Quốc gia Bạch Mã</h3>
+            <p>Khu bảo tồn thiên nhiên với hệ sinh thái đa dạng, thác nước và cảnh quan hùng vĩ.</p>
+          </a>
+        </div>
+        <div class="place-item">
+          <a href="places/lang-khai-dinh.html">
+            <img src="https://images.pexels.com/photos/7897512/pexels-photo-7897512.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Lăng Khải Định" class="main-img">
+            <h3>Lăng Khải Định</h3>
+            <p>Lăng mộ của vua Khải Định, nổi bật với kiến trúc kết hợp Đông Tây độc đáo.</p>
+          </a>
+        </div>
+        <div class="place-item">
+          <a href="places/nui-ngu-binh.html">
+            <img src="https://images.pexels.com/photos/102104/pexels-photo-102104.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Núi Ngự Bình" class="main-img">
+            <h3>Núi Ngự Bình</h3>
+            <p>Ngọn núi biểu tượng của Huế, nơi bạn có thể ngắm nhìn toàn cảnh thành phố.</p>
+          </a>
+        </div>
+        <div class="place-item">
+          <a href="places/lang-minh-mang.html">
+            <img src="https://images.pexels.com/photos/7897525/pexels-photo-7897525.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Lăng Minh Mạng" class="main-img">
+            <h3>Lăng Minh Mạng</h3>
+            <p>Lăng mộ của vua Minh Mạng, nổi bật với kiến trúc uy nghi và phong cảnh thanh bình.</p>
+          </a>
+        </div>
+        <div class="place-item">
+          <a href="places/nha-vuon-an-hien.html">
+            <img src="https://images.pexels.com/photos/370799/pexels-photo-370799.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Nhà vườn An Hiên" class="main-img">
+            <h3>Nhà vườn An Hiên</h3>
+            <p>Một trong những nhà vườn truyền thống đẹp nhất Huế, mang đậm nét văn hóa địa phương.</p>
+          </a>
+        </div>
+        <div class="place-item">
+          <a href="places/dien-hon-chen.html">
+            <img src="https://images.pexels.com/photos/7897530/pexels-photo-7897530.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Điện Hòn Chén" class="main-img">
+            <h3>Điện Hòn Chén</h3>
+            <p>Ngôi đền linh thiêng bên sông Hương, gắn liền với tín ngưỡng thờ Thiên Y A Na.</p>
+          </a>
+        </div>
+        <div class="place-item">
+          <a href="places/pha-tam-giang.html">
+            <img src="https://images.pexels.com/photos/7897535/pexels-photo-7897535.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Phá Tam Giang" class="main-img">
+            <h3>Phá Tam Giang</h3>
+            <p>Hệ thống đầm phá lớn nhất Đông Nam Á, nổi tiếng với cảnh hoàng hôn tuyệt đẹp.</p>
+          </a>
+        </div>
+        <div class="place-item">
+          <a href="places/bien-thuan-an.html">
+            <img src="https://images.pexels.com/photos/10616230/pexels-photo-10616230.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Biển Thuận An" class="main-img">
+            <h3>Biển Thuận An</h3>
+            <p>Bãi biển gần trung tâm Huế, nơi bạn có thể tận hưởng hải sản tươi ngon và không khí trong lành.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Ẩm thực Huế -->
+    <section id="amthuc" class="glass">
+      <h2>Ẩm thực Huế</h2>
+      <div class="food-list">
+        <div class="food-item">
+          <a href="cuisine/bun-bo-hue.html">
+            <img src="https://images.pexels.com/photos/7897495/pexels-photo-7897495.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Bún Bò Huế">
+            <h3>Bún Bò Huế</h3>
+            <p>Món bún đặc sản với nước dùng đậm đà, thịt bò mềm và hương vị cay nồng đặc trưng.</p>
+          </a>
+        </div>
+        <div class="food-item">
+          <a href="cuisine/com-hen.html">
+            <img src="https://images.pexels.com/photos/7897505/pexels-photo-7897505.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Cơm Hến">
+            <h3>Cơm Hến</h3>
+            <p>Món ăn dân dã với hến xào, cơm nguội, rau sống và nước mắm chua ngọt.</p>
+          </a>
+        </div>
+        <div class="food-item">
+          <a href="cuisine/banh-beo.html">
+            <img src="https://images.pexels.com/photos/7897510/pexels-photo-7897510.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Bánh Bèo">
+            <h3>Bánh Bèo</h3>
+            <p>Bánh bột gạo hấp dẫn với nhân tôm khô, hành lá và nước mắm ngọt.</p>
+          </a>
+        </div>
+        <div class="food-item">
+          <a href="cuisine/banh-nam.html">
+            <img src="https://images.pexels.com/photos/7897515/pexels-photo-7897515.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Bánh Nậm">
+            <h3>Bánh Nậm</h3>
+            <p>Bánh bột gạo với nhân tôm thịt, gói trong lá dong và hấp chín.</p>
+          </a>
+        </div>
+        <div class="food-item">
+          <a href="cuisine/banh-bot-loc.html">
+            <img src="https://images.pexels.com/photos/7897520/pexels-photo-7897520.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Bánh Bột Lọc">
+            <h3>Bánh Bột Lọc</h3>
+            <p>Bánh trong suốt làm từ bột sắn, nhân tôm thịt, ăn kèm nước mắm cay.</p>
+          </a>
+        </div>
+        <div class="food-item">
+          <a href="cuisine/banh-khoai.html">
+            <img src="https://images.pexels.com/photos/7897525/pexels-photo-7897525.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Bánh Khoái">
+            <h3>Bánh Khoái</h3>
+            <p>Bánh xèo kiểu Huế, giòn rụm với nhân tôm, thịt, giá đỗ và chấm nước lèo đặc biệt.</p>
+          </a>
+        </div>
+        <div class="food-item">
+          <a href="cuisine/che-hue.html">
+            <img src="https://images.pexels.com/photos/7897530/pexels-photo-7897530.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Chè Huế">
+            <h3>Chè Huế</h3>
+            <p>Các loại chè ngọt ngào như chè bắp, chè đậu ván, là món tráng miệng phổ biến ở Huế.</p>
+          </a>
+        </div>
+        <div class="food-item">
+          <a href="cuisine/bun-thit-nuong.html">
+            <img src="https://images.pexels.com/photos/7897535/pexels-photo-7897535.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Bún Thịt Nướng">
+            <h3>Bún Thịt Nướng</h3>
+            <p>Món bún với thịt heo nướng thơm lừng, rau sống và nước mắm chua ngọt.</p>
+          </a>
+        </div>
+        <div class="food-item">
+          <a href="cuisine/banh-ram-it.html">
+            <img src="https://images.pexels.com/photos/7897540/pexels-photo-7897540.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Bánh Ram Ít">
+            <h3>Bánh Ram Ít</h3>
+            <p>Bánh hấp với phần nhân tôm thịt và phần đế chiên giòn, tạo nên hương vị độc đáo.</p>
+          </a>
+        </div>
+        <div class="food-item">
+          <a href="cuisine/banh-ep-hue.html">
+            <img src="https://images.pexels.com/photos/7897545/pexels-photo-7897545.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Bánh Ép Huế">
+            <h3>Bánh Ép Huế</h3>
+            <p>Bánh tráng nướng với trứng, pate, hành lá, là món ăn vặt phổ biến của giới trẻ.</p>
+          </a>
+        </div>
+        <div class="food-item">
+          <a href="cuisine/banh-can.html">
+            <img src="https://images.pexels.com/photos/7897550/pexels-photo-7897550.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Bánh Căn">
+            <h3>Bánh Căn</h3>
+            <p>Bánh bột gạo nướng trong khuôn nhỏ, ăn kèm với nước mắm và rau sống.</p>
+          </a>
+        </div>
+        <div class="food-item">
+          <a href="cuisine/che-bap.html">
+            <img src="https://images.pexels.com/photos/7897555/pexels-photo-7897555.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Chè Bắp">
+            <h3>Chè Bắp</h3>
+            <p>Chè ngọt làm từ bắp non, nấu với đường và sữa dừa, thơm ngon khó cưỡng.</p>
+          </a>
+        </div>
+        <div class="food-item">
+          <a href="cuisine/bun-cha-ca.html">
+            <img src="https://images.pexels.com/photos/7897560/pexels-photo-7897560.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Bún Chả Cá">
+            <h3>Bún Chả Cá</h3>
+            <p>Món bún với chả cá dai ngon, nước dùng thanh ngọt và rau sống tươi mát.</p>
+          </a>
+        </div>
+        <div class="food-item">
+          <a href="cuisine/banh-uot-thit-nuong.html">
+            <img src="https://images.pexels.com/photos/7897565/pexels-photo-7897565.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Bánh Ướt Thịt Nướng">
+            <h3>Bánh Ướt Thịt Nướng</h3>
+            <p>Bánh ướt mềm mịn cuốn với thịt nướng, rau sống và chấm nước mắm cay.</p>
+          </a>
+        </div>
+        <div class="food-item">
+          <a href="cuisine/che-dau.html">
+            <img src="https://images.pexels.com/photos/7897570/pexels-photo-7897570.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Chè Đậu">
+            <h3>Chè Đậu</h3>
+            <p>Chè đậu xanh hoặc đậu đỏ nấu với đường, thường ăn nóng vào mùa đông.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Homestay Huế -->
+    <section id="homestay" class="glass">
+      <h2>Homestay đẹp ở Huế</h2>
+      <div class="homestay-list">
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/hue-riverside-villa.vi.html" target="_blank">
+            <img src="https://images.pexels.com/photos/1134176/pexels-photo-1134176.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hue Riverside Villa">
+            <h3>Hue Riverside Villa</h3>
+            <p>Homestay nằm bên dòng sông Hương thơ mộng, không gian yên bình và thoáng đãng.</p>
+          </a>
+        </div>
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/mosaic-garden.vi.html" target="_blank">
+            <img src="https://images.pexels.com/photos/2096983/pexels-photo-2096983.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Mosaic Garden Homestay">
+            <h3>Mosaic Garden Homestay</h3>
+            <p>Không gian xanh mát với thiết kế độc đáo, gần trung tâm thành phố Huế.</p>
+          </a>
+        </div>
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/hue-charming.vi.html" target="_blank">
+            <img src="https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hue Charming Homestay">
+            <h3>Hue Charming Homestay</h3>
+            <p>Homestay ấm cúng với phong cách truyền thống Huế, dịch vụ thân thiện.</p>
+          </a>
+        </div>
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/amy-hostel-hue.vi.html" target="_blank">
+            <img src="https://images.pexels.com/photos/1579253/pexels-photo-1579253.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Amy Hostel Hue">
+            <h3>Amy Hostel Hue</h3>
+            <p>Homestay giá cả phải chăng, phù hợp với backpacker, gần các điểm du lịch.</p>
+          </a>
+        </div>
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/hue-little-house.vi.html" target="_blank">
+            <img src="https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hue Little House">
+            <h3>Hue Little House</h3>
+            <p>Ngôi nhà nhỏ xinh xắn, mang lại cảm giác gần gũi như ở nhà.</p>
+          </a>
+        </div>
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/hue-happy-homestay.vi.html" target="_blank">
+            <img src="https://images.pexels.com/photos/279746/pexels-photo-279746.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hue Happy Homestay">
+            <h3>Hue Happy Homestay</h3>
+            <p>Không gian vui tươi, chủ nhà nhiệt tình, gần các quán ăn ngon.</p>
+          </a>
+        </div>
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/hue-thuy-homestay.vi.html" target="_blank">
+            <img src="https://images.pexels.com/photos/3201921/pexels-photo-3201921.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hue Thuy Homestay">
+            <h3>Hue Thuy Homestay</h3>
+            <p>Homestay với không gian yên tĩnh, thích hợp cho gia đình nghỉ dưỡng.</p>
+          </a>
+        </div>
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/hue-eco-homestay.vi.html" target="_blank">
+            <img src="https://images.pexels.com/photos/1488327/pexels-photo-1488327.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hue Eco Homestay">
+            <h3>Hue Eco Homestay</h3>
+            <p>Homestay thân thiện với môi trường, sử dụng vật liệu tái chế và không gian xanh.</p>
+          </a>
+        </div>
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/hue-dreamy-homestay.vi.html" target="_blank">
+            <img src="https://images.pexels.com/photos/2462015/pexels-photo-2462015.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hue Dreamy Homestay">
+            <h3>Hue Dreamy Homestay</h3>
+            <p>Homestay với thiết kế lãng mạn, phù hợp cho các cặp đôi.</p>
+          </a>
+        </div>
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/vu-homestay-hue.vi.html" target="_blank">
+            <img src="https://images.pexels.com/photos/2062426/pexels-photo-2062426.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Vu Homestay Hue">
+            <h3>Vu Homestay Hue</h3>
+            <p>Homestay với không gian mở, gần sông Hương và các điểm tham quan.</p>
+          </a>
+        </div>
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/hue-ancient-house.vi.html" target="_blank">
+            <img src="https://images.pexels.com/photos/3201922/pexels-photo-3201922.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hue Ancient House">
+            <h3>Hue Ancient House</h3>
+            <p>Homestay mang phong cách cổ điển Huế, với nội thất gỗ và sân vườn truyền thống.</p>
+          </a>
+        </div>
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/hue-cozy-homestay.vi.html" target="_blank">
+            <img src="https://images.pexels.com/photos/2724749/pexels-photo-2724749.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hue Cozy Homestay">
+            <h3>Hue Cozy Homestay</h3>
+            <p>Không gian ấm áp, gần gũi, phù hợp cho những ai tìm kiếm sự thư giãn.</p>
+          </a>
+        </div>
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/hue-green-homestay.vi.html" target="_blank">
+            <img src="https://images.pexels.com/photos/2291599/pexels-photo-2291599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hue Green Homestay">
+            <h3>Hue Green Homestay</h3>
+            <p>Homestay với nhiều cây xanh, mang lại cảm giác mát mẻ và gần gũi thiên nhiên.</p>
+          </a>
+        </div>
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/hue-sweet-home.vi.html" target="_blank">
+            <img src="https://images.pexels.com/photos/237371/pexels-photo-237371.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hue Sweet Home">
+            <h3>Hue Sweet Home</h3>
+            <p>Homestay với không gian ngọt ngào, dịch vụ chu đáo và vị trí thuận tiện.</p>
+          </a>
+        </div>
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/hue-traditional-homestay.vi.html" target="_blank">
+            <img src="https://images.pexels.com/photos/275503/pexels-photo-275503.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Hue Traditional Homestay">
+            <h3>Hue Traditional Homestay</h3>
+            <p>Homestay mang đậm nét văn hóa Huế, với kiến trúc truyền thống và không gian yên bình.</p>
+          </a>
+        </div>
+        <div class="homestay-item">
+          <a href="https://www.booking.com/hotel/vn/a-ma-house.vi.html" target="_blank">
+            <img src="https://ticotravel.com.vn/wp-content/uploads/2022/07/A-Maze-House-Hue-1.webp" alt="a-mA House">
+            <h3>a-mA House</h3>
+            <p>Không gian hoài cổ, ấm cúng, đậm chất Huế xưa, mang lại cảm giác bình yên.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Liên hệ -->
+    <section id="lienhe">
+      <h2>Liên hệ</h2>
+      <div class="contact-icon">📧</div>
+      <a class="contact-email" href="mailto:info@hue-travel.com">info@hue-travel.com</a>
+      <div class="contact-socials">
+        <a class="social-link" title="Facebook" href="#"><span class="social-icon"><svg width="24" height="24" fill="currentColor"><path d="M22 12c0-5.522-4.477-10-10-10S2 6.478 2 12c0 4.991 3.657 9.128 8.438 9.877v-6.987h-2.54v-2.89h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.242 0-1.632.771-1.632 1.562v1.875h2.773l-.443 2.89h-2.33v6.987C18.343 21.128 22 16.991 22 12"></path></svg></span> Facebook</a>
+        <a class="social-link" title="YouTube" href="#"><span class="social-icon"><svg width="24" height="24" fill="currentColor"><path d="M21.8 8.001s-.2-1.4-.8-2c-.7-.8-1.5-.8-1.9-.9C16.2 5 12 5 12 5h-.1s-4.2 0-7.1.1c-.4.1-1.2.1-1.9.9-.6.6-.8 2-.8 2S2 9.6 2 11.2v1.6c0 1.6.2 3.2.2 3.2s.2 1.4.8 2c.7.8 1.7.8 2.1.9 1.5.1 6.9.1 6.9.1s4.2 0 7.1-.1c.4-.1 1.2-.1 1.9-.9.6-.6.8-2 .8-2s.2-1.6.2-3.2v-1.6c0-1.6-.2-3.2-.2-3.2zM9.8 15.1V8.9l6.2 3.1-6.2 3.1z"></path></svg></span> YouTube</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal Đăng nhập/Đăng ký -->
+  <div id="auth-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="document.getElementById('auth-modal').style.display='none'">&times;</span>
+      <div class="auth-tabs">
+        <button class="tab-btn active" id="tab-login-btn" onclick="showTab('login')">Đăng nhập</button>
+        <button class="tab-btn" id="tab-register-btn" onclick="showTab('register')">Đăng ký</button>
+      </div>
+      <div id="tab-login" class="tab-content active">
+        <h3>Đăng nhập</h3>
+        <form id="login-form" onsubmit="return handleLogin(event)">
+          <input type="text" id="login-username" placeholder="Tên đăng nhập" required>
+          <input type="password" placeholder="Mật khẩu" required>
+          <button type="submit">Đăng nhập</button>
+        </form>
+      </div>
+      <div id="tab-register" class="tab-content">
+        <h3>Đăng ký</h3>
+        <form id="register-form" onsubmit="return handleRegister(event)">
+          <input type="text" placeholder="Tên đăng nhập" required>
+          <input type="email" placeholder="Email" required>
+          <input type="password" placeholder="Mật khẩu" required>
+          <button type="submit">Đăng ký</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2024 Khám phá Huế. Thiết kế bởi AI.
+  </footer>
+
+  <script>
+    // Loading overlay
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.getElementById('loader').style.display = 'none';
+      }, 1200);
+      checkLoginStatus();
+    });
+    // Đóng modal khi bấm ngoài vùng modal
+    window.onclick = function(event) {
+      var modal = document.getElementById('auth-modal');
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+    // Tab chuyển đổi Đăng nhập/Đăng ký
+    function showTab(tab) {
+      var loginTab = document.getElementById('tab-login');
+      var registerTab = document.getElementById('tab-register');
+      var loginBtn = document.getElementById('tab-login-btn');
+      var registerBtn = document.getElementById('tab-register-btn');
+      if(tab === 'login') {
+        loginTab.classList.add('active');
+        registerTab.classList.remove('active');
+        loginBtn.classList.add('active');
+        registerBtn.classList.remove('active');
+      } else {
+        loginTab.classList.remove('active');
+        registerTab.classList.add('active');
+        loginBtn.classList.remove('active');
+        registerBtn.classList.add('active');
+      }
+    }
+    // Xử lý đăng nhập thực tế
+    function handleLogin(event) {
+      event.preventDefault();
+      var username = document.getElementById('login-username').value.trim();
+      if(username) {
+        localStorage.setItem('hue_travel_user', username);
+        document.getElementById('auth-modal').style.display = 'none';
+        updateUserUI(username);
+        showToast('Đăng nhập thành công!');
+      }
+      return false;
+    }
+    // Xử lý đăng ký (chỉ hiển thị thông báo demo)
+    function handleRegister(event) {
+      event.preventDefault();
+      document.getElementById('auth-modal').style.display = 'none';
+      showToast('Đăng ký thành công!');
+      return false;
+    }
+    function checkLoginStatus() {
+      var username = localStorage.getItem('hue_travel_user');
+      if(username) {
+        updateUserUI(username);
+      } else {
+        updateUserUI(null);
+      }
+    }
+    function updateUserUI(username) {
+      var loginBtn = document.getElementById('login-btn');
+      var userInfo = document.getElementById('user-info');
+      var usernameDisplay = document.getElementById('username-display');
+      if(username) {
+        loginBtn.style.display = 'none';
+        userInfo.style.display = 'inline-flex';
+        usernameDisplay.textContent = username;
+      } else {
+        loginBtn.style.display = '';
+        userInfo.style.display = 'none';
+        usernameDisplay.textContent = '';
+      }
+    }
+    function logoutUser() {
+      localStorage.removeItem('hue_travel_user');
+      updateUserUI(null);
+      showToast('Đăng xuất thành công!');
+    }
+    // Toast notification
+    function showToast(msg) {
+      var toast = document.getElementById('toast');
+      var toastMsg = document.getElementById('toast-msg');
+      toastMsg.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(function(){ toast.style.opacity = 1; }, 10);
+      setTimeout(function(){ toast.style.opacity = 0; }, 2000);
+      setTimeout(function(){ toast.style.display = 'none'; }, 2400);
+    }
+  </script>
+</body>
+</html> 
